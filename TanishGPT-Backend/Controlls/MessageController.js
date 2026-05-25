@@ -1,5 +1,5 @@
 const Chat = require("../Models/Chat");
-const User = require("../Models/user");
+const User = require("../Models/User");
 const client = require("../Config/openai");
 const imagekit = require("../Config/imagekit");
 const axios = require("axios");
