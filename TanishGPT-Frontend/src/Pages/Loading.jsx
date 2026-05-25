@@ -1,0 +1,23 @@
+import React, { useEffect } from 'react'
+import { useAppContext } from '../Context/AppContext';
+
+const Loading = () => {
+
+  const { navigate } = useAppContext();
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      navigate("/");
+    }, 8000);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  return (
+    <div className='bg-gradient-to-b from-[#531B81] to-[#29184B] flex items-center justify-center w-screen h-screen'>
+      <div className='w-10 h-10 rounded-full border-4 border-white border-t-transparent animate-spin'></div>
+    </div>
+  )
+}
+
+export default Loading;

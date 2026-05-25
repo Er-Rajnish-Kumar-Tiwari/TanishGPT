@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Styles */
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Smooth Theme Transition */
+html{
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hide Scrollbar */
+::-webkit-scrollbar{
+  display: none;
+}
+
+/* Custom Utility Classes */
+@layer utilities {
+
+  .bg-primary{
+    background-color: #E6CCFF;
+  }
+
+  .text-primary{
+    color: #E6CCFF;
+  }
+
+}
+
+.reset-tw :not(pre):not(code){
+  all:revert;
+}
+
+.loader div:nth-child(2){
+  animation-delay: 0.2s;
+}
+
+.loader div:nth-child(3){
+  animation-delay: 0.4s;
+}
