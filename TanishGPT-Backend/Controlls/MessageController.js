@@ -248,47 +248,42 @@ const imageMessageController = async (req, res) => {
 };
 
 const getPublishedImages = async (req, res) => {
-    try {
-        const userId = req.user._id;
-        const { chatId } = req.body;
+  try {
 
-        // 1. Find User
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found"
-            });
+    // Sirf published image messages fetch karo
+    const chats = await Chat.find(
+      {
+        "messages.isImage": true,
+        "messages.isPublished": true,
+      },
+      {
+        messages: 1,
+      }
+    );
+
+    // Images collect karna
+    const publishedImages = [];
+
+    chats.forEach((chat) => {
+      chat.messages.forEach((message) => {
+        if (message.isImage && message.isPublished) {
+          publishedImages.push(message);
         }
+      });
+    });
 
-        // 2. Find Chat
-        const chat = await Chat.findOne({
-            _id: chatId,
-            userId
-        });
+    return res.status(200).json({
+      success: true,
+      count: publishedImages.length,
+      publishedImages,
+    });
 
-        if (!chat) {
-            return res.status(404).json({
-                success: false,
-                message: "Chat not found"
-            });
-        }
-
-        // 3. Get Published Images
-        const publishedImages = chat.messages.filter(message => message.isImage && message.isPublished);
-
-        return res.status(200).json({
-            success: true,
-            message: "Published images retrieved successfully",
-            publishedImages
-        });
-
-    } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: error.message || "Internal Server Error"
-        });
-    }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Internal Server Error",
+    });
+  }
 };
 
 module.exports = { textMessageController, imageMessageController, getPublishedImages };

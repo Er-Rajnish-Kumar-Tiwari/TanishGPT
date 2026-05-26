@@ -5,6 +5,6 @@ const tanishGPTAuth = require('../Middlewares/Auth');
 
 messageRouter.post("/text", tanishGPTAuth, textMessageController);
 messageRouter.post("/image", tanishGPTAuth, imageMessageController);
-messageRouter.get("/published-images", tanishGPTAuth, getPublishedImages);
+messageRouter.get("/published-images", getPublishedImages);
 
 module.exports = messageRouter;

@@ -1,22 +1,31 @@
 import React, { useEffect, useState } from 'react'
 import { dummyPublishedImages } from '../assets/assets';
 import Loading from './Loading';
+import { useAppContext } from "../Context/AppContext";
 
 const Community = () => {
 
   const [images,setImages]=useState([]);
-  const [loasding,setLoading]=useState(false);
+  const [loading,setLoading]=useState(false);
+  const {axios,token} = useAppContext();
 
   const fetchImages=async()=>{
-    setImages(dummyPublishedImages);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const response = await axios.get('/message/published-images',{headers: { Authorization: `Bearer ${token}` }});
+      setImages(response.data.images);
+    } catch (error) {
+      console.error("Error fetching community images:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(()=>{
     fetchImages();
   },[]);
 
-  if(loasding){
+  if(loading){
     return <Loading/>
   }
 
