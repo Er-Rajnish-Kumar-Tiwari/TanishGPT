@@ -8,7 +8,8 @@ const Message = ({message}) => {
 
   useEffect(()=>{
     Prism.highlightAll();
-  },[message.content]);
+    console.log(message);
+  },[message]);
 
   return (
 

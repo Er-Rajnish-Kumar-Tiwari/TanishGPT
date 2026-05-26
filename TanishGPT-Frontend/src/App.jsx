@@ -9,6 +9,7 @@ import { useState } from "react";
 import { assets } from "./assets/assets";
 import "./assets/prism.css";
 import { useAppContext } from "./Context/AppContext";
+import { Toaster } from "react-hot-toast";
 
 function App() {
 
@@ -45,6 +46,7 @@ function App() {
           </div>
         )}
 
+      <Toaster />
     </>
   );
 }

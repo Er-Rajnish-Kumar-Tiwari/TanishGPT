@@ -1,13 +1,27 @@
 import React, { useState } from "react";
+import { useAppContext } from "../Context/AppContext";
 
 const Login = () => {
   const [state, setState] = useState("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const {setToken, axios,toast,navigate} = useAppContext();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const url = state === "login" ? "/user/login" : "/user/register";
+
+    try {
+      await axios.post(url, { name, email, password }).then((res) => {
+        setToken(res.data.token);
+        localStorage.setItem("token", res.data.token);
+        toast.success(res.data.message);
+        navigate("/");
+      });
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (

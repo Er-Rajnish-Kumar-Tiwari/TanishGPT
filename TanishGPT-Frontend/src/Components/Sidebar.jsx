@@ -4,9 +4,35 @@ import { assets } from "../assets/assets";
 import moment from "moment/moment";
 
 const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
-  const { user, chats, selectedChat, setSelectedChat, theme, setTheme, navigate } = useAppContext();
+  const { user, chats, selectedChat, setSelectedChat, theme, setTheme, navigate ,toast,setUser,axios,fetchUserChats,setChats,createChat,token} = useAppContext();
   const [searchTerm, setSearchTerm] = useState("");
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+    navigate("/login");
+      toast.success("Logged out successfully");
+  };
+
+  const deleteChat = async (chatId,e) => {
+    try {
+      e.stopPropagation();
+      const confirmDelete = window.confirm("Are you sure you want to delete this chat?");
+      if (!confirmDelete) return;
+
+      await axios.post(`/chat/delete`, { chatId }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      
+      setChats(chats.filter(chat => chat._id !== chatId));
+      await fetchUserChats();
+      toast.success("Chat deleted successfully");
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+
+  {!user && navigate("/login")}
   return (
     <div className={`flex flex-col h-screen min-w-72 p-5 dark:bg-gradient-to-b from-[#242124]/30 to-[#000000]/30 border-r border-[#80609F]/30 backdrop-blur-3xl transition-all duration-500 max-md:absolute left-0 z-1 ${!isMenuOpen && "max-md:-translate-x-full"}`}>
 
@@ -17,7 +43,7 @@ const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
         onClick={() => navigate("/")}
       />
 
-      <button className="flex items-center justify-center w-full py-2 mt-10 text-white bg-gradient-to-r from-[#A456F7] to-[#3D81F6] text-sm rounded-md hover:from-[#CDA1FF] hover:to-[#80609F] cursor-pointer ">
+      <button onClick={() => createChat()} className="flex items-center justify-center w-full py-2 mt-10 text-white bg-gradient-to-r from-[#A456F7] to-[#3D81F6] text-sm rounded-md hover:from-[#CDA1FF] hover:to-[#80609F] cursor-pointer ">
         <span className="mr-2 text-xl">+</span> New Chat
       </button>
 
@@ -43,7 +69,7 @@ const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
                   <p className="truncate w-full">{chat.messages.length > 0 ? chat.messages[0].content.slice(0, 10) : chat.name}</p>
                   <p className="text-xs text-gray-500 dark:text-[#B1A6C0]">{moment(chat.updatedAt).fromNow()}</p>
                 </div>
-                <img src={assets.bin_icon} alt="Delete Chat" className=" w-4 cursor-pointer brightness-0 dark:invert" />
+                <img src={assets.bin_icon} alt="Delete Chat" className=" w-4 cursor-pointer brightness-0 dark:invert"  onClick = {(e)=>toast.promise(deleteChat(chat._id,e))}/>
               </div>
 
             ))
@@ -88,7 +114,7 @@ const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
 
         <img src={assets.user_icon} alt="Gallery Icon" className="w-7 rounded-full" />
         <p className="flex-1 text-sm dark:text-primary truncate">{user ? user.name : "Login to use tanishgpt"}</p>
-        {user && <img src={assets.logout_icon} alt="Logout Icon" className="h-5 cursor-pointer brightness-0 dark:invert group-hover:block" />}
+        {user && <img src={assets.logout_icon} alt="Logout Icon" className="h-5 cursor-pointer brightness-0 dark:invert group-hover:block"  onClick={handleLogout}/>}
 
       </div>
 
