@@ -192,7 +192,7 @@ const imageMessageController = async (req, res) => {
 
         const response = await axios.get(pollinationsUrl, {
             responseType: "arraybuffer",
-            timeout: 40000 // 40 seconds timeout
+            timeout: 90000 // 40 seconds timeout
         });
 
         // Convert arraybuffer to Base64 safely
