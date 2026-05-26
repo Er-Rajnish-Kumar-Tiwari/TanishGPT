@@ -8,7 +8,7 @@ const Community = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const { axios } = useAppContext();
+  const { axios, toast } = useAppContext();
 
   const fetchImages = async () => {
     try {
